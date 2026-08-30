@@ -1,0 +1,689 @@
+[
+  {
+    "query": "奥利奥冰淇淋怎么做",
+    "expected_dishes": [
+      "奥利奥冰淇淋"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "红烧鱼头怎么做",
+    "expected_dishes": [
+      "红烧鱼头"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "烤鸡翅怎么做",
+    "expected_dishes": [
+      "烤鸡翅"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "徽派红烧肉怎么做",
+    "expected_dishes": [
+      "徽派红烧肉"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "小炒鸡肝怎么做",
+    "expected_dishes": [
+      "小炒鸡肝"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "龟苓膏怎么做",
+    "expected_dishes": [
+      "龟苓膏"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "葱油怎么做",
+    "expected_dishes": [
+      "葱油"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "炒滑蛋怎么做",
+    "expected_dishes": [
+      "炒滑蛋"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "金枪鱼酱三明治怎么做",
+    "expected_dishes": [
+      "金枪鱼酱三明治"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "西葫芦炒鸡蛋怎么做",
+    "expected_dishes": [
+      "西葫芦炒鸡蛋"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "手工水饺怎么做",
+    "expected_dishes": [
+      "手工水饺"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "葱烧海参怎么做",
+    "expected_dishes": [
+      "葱烧海参"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "葱油桂鱼怎么做",
+    "expected_dishes": [
+      "葱油桂鱼"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "油酥怎么做",
+    "expected_dishes": [
+      "油酥"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "孜然牛肉怎么做",
+    "expected_dishes": [
+      "孜然牛肉"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "尖椒炒牛肉怎么做",
+    "expected_dishes": [
+      "尖椒炒牛肉"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "上汤娃娃菜怎么做",
+    "expected_dishes": [
+      "上汤娃娃菜"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "鸡蛋火腿炒黄瓜怎么做",
+    "expected_dishes": [
+      "鸡蛋火腿炒黄瓜"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "红烧鲤鱼怎么做",
+    "expected_dishes": [
+      "红烧鲤鱼"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "红烧茄子怎么做",
+    "expected_dishes": [
+      "红烧茄子"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "台式卤肉饭怎么做",
+    "expected_dishes": [
+      "台式卤肉饭"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "微波炉腊肠煲仔饭怎么做",
+    "expected_dishes": [
+      "微波炉腊肠煲仔饭"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "宫保鸡丁怎么做",
+    "expected_dishes": [
+      "宫保鸡丁"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "炒馍怎么做",
+    "expected_dishes": [
+      "炒馍"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "西红柿豆腐汤羹怎么做",
+    "expected_dishes": [
+      "西红柿豆腐汤羹"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "猪皮冻怎么做",
+    "expected_dishes": [
+      "猪皮冻"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "微波葱姜黑鳕鱼怎么做",
+    "expected_dishes": [
+      "微波葱姜黑鳕鱼"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "泰国手标红茶怎么做",
+    "expected_dishes": [
+      "泰国手标红茶"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "酱牛肉怎么做",
+    "expected_dishes": [
+      "酱牛肉"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "杨枝甘露怎么做",
+    "expected_dishes": [
+      "杨枝甘露"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "姜葱捞鸡怎么做",
+    "expected_dishes": [
+      "姜葱捞鸡"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "辣椒炒肉怎么做",
+    "expected_dishes": [
+      "辣椒炒肉"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "昂刺鱼豆腐汤怎么做",
+    "expected_dishes": [
+      "昂刺鱼豆腐汤"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "简易版炒糖色怎么做",
+    "expected_dishes": [
+      "简易版炒糖色"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "鱼香茄子怎么做",
+    "expected_dishes": [
+      "鱼香茄子"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "青椒土豆炒肉怎么做",
+    "expected_dishes": [
+      "青椒土豆炒肉"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "微波炉鸡蛋羹怎么做",
+    "expected_dishes": [
+      "微波炉鸡蛋羹"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "水煮肉片怎么做",
+    "expected_dishes": [
+      "水煮肉片"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "鳊鱼炖豆腐怎么做",
+    "expected_dishes": [
+      "鳊鱼炖豆腐"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "电饭煲三文鱼炊饭怎么做",
+    "expected_dishes": [
+      "电饭煲三文鱼炊饭"
+    ],
+    "role": "user",
+    "intent": "detail"
+  },
+  {
+    "query": "红烧菜品有哪些做法",
+    "expected_dishes": [
+      "南派红烧肉",
+      "徽派红烧肉",
+      "湖南家常红烧肉",
+      "简易红烧肉",
+      "红烧冬瓜",
+      "红烧猪蹄",
+      "红烧茄子",
+      "红烧鱼",
+      "红烧鱼头",
+      "红烧鲤鱼"
+    ],
+    "role": "user",
+    "intent": "keyword"
+  },
+  {
+    "query": "糖醋菜品有哪些做法",
+    "expected_dishes": [
+      "糖醋排骨",
+      "糖醋汁",
+      "糖醋里脊",
+      "糖醋鲤鱼"
+    ],
+    "role": "user",
+    "intent": "keyword"
+  },
+  {
+    "query": "清蒸菜品有哪些做法",
+    "expected_dishes": [
+      "清蒸南瓜",
+      "清蒸生蚝",
+      "清蒸鲈鱼",
+      "清蒸鳜鱼"
+    ],
+    "role": "user",
+    "intent": "keyword"
+  },
+  {
+    "query": "炒饭菜品有哪些做法",
+    "expected_dishes": [
+      "扬州炒饭",
+      "蛋炒饭"
+    ],
+    "role": "user",
+    "intent": "keyword"
+  },
+  {
+    "query": "汤菜品有哪些做法",
+    "expected_dishes": [
+      "上汤娃娃菜",
+      "勾芡香菇汤",
+      "奶油蘑菇汤",
+      "排骨苦瓜汤",
+      "昂刺鱼豆腐汤",
+      "朱雀汤",
+      "汤面",
+      "玉米排骨汤",
+      "生汆丸子汤",
+      "番茄牛肉蛋花汤",
+      "紫菜蛋花汤",
+      "罗宋汤",
+      "羊肉汤",
+      "西红柿豆腐汤羹",
+      "西红柿鸡蛋汤",
+      "酸梅汤",
+      "酸梅汤（半成品加工）",
+      "醪糟小汤圆",
+      "金汤力",
+      "金针菇汤",
+      "陈皮排骨汤"
+    ],
+    "role": "user",
+    "intent": "keyword"
+  },
+  {
+    "query": "推荐几道中等的主食",
+    "expected_dishes": [
+      "蛋包饭"
+    ],
+    "expected_filters": {
+      "category": "主食",
+      "difficulty": "中等"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道困难的主食",
+    "expected_dishes": [
+      "披萨饼皮"
+    ],
+    "expected_filters": {
+      "category": "主食",
+      "difficulty": "困难"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道非常简单的早餐",
+    "expected_dishes": [
+      "牛奶燕麦"
+    ],
+    "expected_filters": {
+      "category": "早餐",
+      "difficulty": "非常简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道非常困难的早餐",
+    "expected_dishes": [
+      "完美水煮蛋"
+    ],
+    "expected_filters": {
+      "category": "早餐",
+      "difficulty": "非常困难"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的水产",
+    "expected_dishes": [
+      "蒜蓉虾"
+    ],
+    "expected_filters": {
+      "category": "水产",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的水产",
+    "expected_dishes": [
+      "白灼虾"
+    ],
+    "expected_filters": {
+      "category": "水产",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道中等的汤品",
+    "expected_dishes": [
+      "陈皮排骨汤"
+    ],
+    "expected_filters": {
+      "category": "汤品",
+      "difficulty": "中等"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道困难的汤品",
+    "expected_dishes": [
+      "陈皮排骨汤"
+    ],
+    "expected_filters": {
+      "category": "汤品",
+      "difficulty": "困难"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道中等的甜品",
+    "expected_dishes": [
+      "英式司康"
+    ],
+    "expected_filters": {
+      "category": "甜品",
+      "difficulty": "中等"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道中等的甜品",
+    "expected_dishes": [
+      "炸鲜奶"
+    ],
+    "expected_filters": {
+      "category": "甜品",
+      "difficulty": "中等"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的素菜",
+    "expected_dishes": [
+      "话梅煮毛豆"
+    ],
+    "expected_filters": {
+      "category": "素菜",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的素菜",
+    "expected_dishes": [
+      "凉拌豆腐"
+    ],
+    "expected_filters": {
+      "category": "素菜",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道中等的荤菜",
+    "expected_dishes": [
+      "卤菜"
+    ],
+    "expected_filters": {
+      "category": "荤菜",
+      "difficulty": "中等"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道中等的荤菜",
+    "expected_dishes": [
+      "香干肉丝"
+    ],
+    "expected_filters": {
+      "category": "荤菜",
+      "difficulty": "中等"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道困难的调料",
+    "expected_dishes": [
+      "简易版炒糖色"
+    ],
+    "expected_filters": {
+      "category": "调料",
+      "difficulty": "困难"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的调料",
+    "expected_dishes": [
+      "糖醋汁"
+    ],
+    "expected_filters": {
+      "category": "调料",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的饮品",
+    "expected_dishes": [
+      "冬瓜茶"
+    ],
+    "expected_filters": {
+      "category": "饮品",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "推荐几道简单的饮品",
+    "expected_dishes": [
+      "杨枝甘露"
+    ],
+    "expected_filters": {
+      "category": "饮品",
+      "difficulty": "简单"
+    },
+    "role": "user",
+    "intent": "browse"
+  },
+  {
+    "query": "半成品意面的生产工艺",
+    "expected_dishes": [],
+    "expect_empty": true,
+    "role": "user",
+    "intent": "permission_denied"
+  },
+  {
+    "query": "半成品意面的生产工艺",
+    "expected_dishes": [
+      "半成品意面"
+    ],
+    "role": "staff",
+    "intent": "permission_allowed"
+  },
+  {
+    "query": "空气炸锅鸡翅中的生产工艺",
+    "expected_dishes": [],
+    "expect_empty": true,
+    "role": "user",
+    "intent": "permission_denied"
+  },
+  {
+    "query": "空气炸锅鸡翅中的生产工艺",
+    "expected_dishes": [
+      "空气炸锅鸡翅中"
+    ],
+    "role": "staff",
+    "intent": "permission_allowed"
+  },
+  {
+    "query": "牛油火锅底料的生产工艺",
+    "expected_dishes": [],
+    "expect_empty": true,
+    "role": "user",
+    "intent": "permission_denied"
+  },
+  {
+    "query": "牛油火锅底料的生产工艺",
+    "expected_dishes": [
+      "牛油火锅底料"
+    ],
+    "role": "staff",
+    "intent": "permission_allowed"
+  },
+  {
+    "query": "炸薯条的生产工艺",
+    "expected_dishes": [],
+    "expect_empty": true,
+    "role": "user",
+    "intent": "permission_denied"
+  },
+  {
+    "query": "炸薯条的生产工艺",
+    "expected_dishes": [
+      "炸薯条"
+    ],
+    "role": "staff",
+    "intent": "permission_allowed"
+  },
+  {
+    "query": "空气炸锅羊排的生产工艺",
+    "expected_dishes": [],
+    "expect_empty": true,
+    "role": "user",
+    "intent": "permission_denied"
+  },
+  {
+    "query": "空气炸锅羊排的生产工艺",
+    "expected_dishes": [
+      "空气炸锅羊排"
+    ],
+    "role": "staff",
+    "intent": "permission_allowed"
+  }
+]

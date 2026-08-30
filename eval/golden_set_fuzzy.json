@@ -1,0 +1,202 @@
+[
+  {
+    "query": "番茄炒蛋的家常做法",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "西红柿炒鸡蛋"
+    ]
+  },
+  {
+    "query": "麻辣豆腐的正宗做法",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "麻婆豆腐"
+    ]
+  },
+  {
+    "query": "台湾卤肉饭怎么做",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "台式卤肉饭"
+    ]
+  },
+  {
+    "query": "酸辣马铃薯丝怎么炒",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "酸辣土豆丝"
+    ]
+  },
+  {
+    "query": "湘味红烧肉怎么烧",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "湖南家常红烧肉"
+    ]
+  },
+  {
+    "query": "手撕卷心菜的做法",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "手撕包菜"
+    ]
+  },
+  {
+    "query": "微波炉煎蛋的做法",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "微波炉荷包蛋"
+    ]
+  },
+  {
+    "query": "安徽风味的红烧肉怎么做",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "徽派红烧肉"
+    ]
+  },
+  {
+    "query": "港式甜品芒果西柚西米露",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "杨枝甘露"
+    ]
+  },
+  {
+    "query": "贝类海鲜清蒸的做法",
+    "role": "user",
+    "intent": "synonym",
+    "expected_dishes": [
+      "清蒸生蚝"
+    ]
+  },
+  {
+    "query": "红烧茄了怎么做好吃",
+    "role": "user",
+    "intent": "typo",
+    "expected_dishes": [
+      "红烧茄子"
+    ]
+  },
+  {
+    "query": "糖醋利脊怎么做",
+    "role": "user",
+    "intent": "typo",
+    "expected_dishes": [
+      "糖醋里脊"
+    ]
+  },
+  {
+    "query": "水煮rou片的家常做法",
+    "role": "user",
+    "intent": "typo",
+    "expected_dishes": [
+      "水煮肉片"
+    ]
+  },
+  {
+    "query": "鱼香茄子煲怎么做",
+    "role": "user",
+    "intent": "typo",
+    "expected_dishes": [
+      "鱼香茄子"
+    ]
+  },
+  {
+    "query": "鸡蛋羹怎么做才嫩",
+    "role": "user",
+    "intent": "typo",
+    "expected_dishes": [
+      "鸡蛋羹",
+      "微波炉鸡蛋羹",
+      "蒸箱鸡蛋羹"
+    ]
+  },
+  {
+    "query": "蛋黄流心的蛋怎么煮",
+    "role": "user",
+    "intent": "typo",
+    "expected_dishes": [
+      "溏心蛋",
+      "温泉蛋"
+    ]
+  },
+  {
+    "query": "五花肉加酱油冰糖小火慢炖的红亮硬菜",
+    "role": "user",
+    "intent": "indirect",
+    "expected_dishes": [
+      "南派红烧肉",
+      "徽派红烧肉",
+      "湖南家常红烧肉",
+      "简易红烧肉"
+    ]
+  },
+  {
+    "query": "麻辣鲜香肉末豆腐的川菜",
+    "role": "user",
+    "intent": "indirect",
+    "expected_dishes": [
+      "麻婆豆腐"
+    ]
+  },
+  {
+    "query": "把茄子做出鳗鱼风味的做法",
+    "role": "user",
+    "intent": "indirect",
+    "expected_dishes": [
+      "蒲烧茄子"
+    ]
+  },
+  {
+    "query": "宴客拿得出手的清蒸整鱼",
+    "role": "user",
+    "intent": "indirect",
+    "expected_dishes": [
+      "清蒸鲈鱼",
+      "清蒸鳜鱼",
+      "葱油桂鱼"
+    ]
+  },
+  {
+    "query": "夏天冰镇酸酸甜甜的乌梅饮品",
+    "role": "user",
+    "intent": "indirect",
+    "expected_dishes": [
+      "酸梅汤"
+    ]
+  },
+  {
+    "query": "用电饭煲做的三文鱼焖饭",
+    "role": "user",
+    "intent": "confusable",
+    "expected_dishes": [
+      "电饭煲三文鱼炊饭"
+    ]
+  },
+  {
+    "query": "炒糖色新手简易版",
+    "role": "user",
+    "intent": "confusable",
+    "expected_dishes": [
+      "简易版炒糖色"
+    ]
+  },
+  {
+    "query": "空气炸锅版的羊排做法",
+    "role": "user",
+    "intent": "confusable",
+    "expected_dishes": [
+      "空气炸锅羊排"
+    ]
+  }
+]

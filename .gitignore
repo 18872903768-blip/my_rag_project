@@ -1,0 +1,17 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.uv-cache/
+.coverage
+htmlcov/
+.artifacts/
+vector_index/
+*.tmp
+logs/
+.zcode/
+*.sqlite
+*.db

@@ -1,0 +1,15 @@
+.venv
+__pycache__
+*.pyc
+.git
+rag_modules_old
+main_old.py
+config_old.py
+tests
+eval
+scripts
+logs
+vector_index
+.artifacts
+uv.lock
+docker-compose.yml
