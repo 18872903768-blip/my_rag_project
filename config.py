@@ -115,15 +115,23 @@ class RAGConfig:
 
     # agent 管线统一上下文管理（ContextItem/token 预算/优先级/去重）。
     # false 时走原 _history_prefix 硬拼 + _build_context 字符拼接路径。
-    context_manager_enabled: bool = False
+    # RAGAS A/B（45 条 agent 臂，2026-08-30）：开启后 faithfulness 0.921→0.917、
+    # relevancy 0.849→0.852、correctness 0.685→0.690、context_precision
+    # 0.866→0.866 全部持平（context_recall 0.774→0.737，整篇丢弃 vs 字符
+    # 部分保留的语义差异）；多轮记忆用例 7/7 通过。质量不回退且解锁记忆
+    # 注入，故默认开启。
+    context_manager_enabled: bool = True
     context_budget_tokens: int = 6000
 
     # 多轮指代消解：agent 检索前把"那第二种呢"改写为独立查询（LLM 一次调用）
-    query_contextualization_enabled: bool = False
+    # 多轮用例实测改写后检索命中目标菜品（anaphora_resolution 用例通过）。
+    query_contextualization_enabled: bool = True
 
     # 长期记忆（饮食偏好领域化）：SQLite 存储 + LLM 抽取 + 写入策略。
     # 开启后 agent 回答结束会尝试抽取记忆，检索前注入相关偏好。
-    memory_enabled: bool = False
+    # 多轮用例 7/7：写入/更新 supersede/过期 TTL/临时偏好不写入/跨会话生效
+    # 全部通过（eval/multi_turn_eval.json + eval/run_memory_eval.py）。
+    memory_enabled: bool = True
     memory_db_path: str = str((PROJECT_DIR / "memory_store.sqlite3").resolve())
 
     @classmethod
@@ -174,14 +182,14 @@ class RAGConfig:
             max_context_chars=_int_from_env("RAG_MAX_CONTEXT_CHARS", 6000),
             grounded_answer=os.getenv("RAG_GROUNDED_ANSWER", "true").casefold()
             not in {"0", "false", "no", "off"},
-            context_manager_enabled=os.getenv("RAG_CONTEXT_MANAGER", "false").casefold()
+            context_manager_enabled=os.getenv("RAG_CONTEXT_MANAGER", "true").casefold()
             not in {"0", "false", "no", "off"},
             context_budget_tokens=_int_from_env("RAG_CONTEXT_BUDGET", 6000),
             query_contextualization_enabled=os.getenv(
-                "RAG_QUERY_CONTEXTUALIZATION", "false"
+                "RAG_QUERY_CONTEXTUALIZATION", "true"
             ).casefold()
             not in {"0", "false", "no", "off"},
-            memory_enabled=os.getenv("RAG_MEMORY_ENABLED", "false").casefold()
+            memory_enabled=os.getenv("RAG_MEMORY_ENABLED", "true").casefold()
             not in {"0", "false", "no", "off"},
             memory_db_path=_path_from_env(
                 "RAG_MEMORY_DB", PROJECT_DIR / "memory_store.sqlite3"
