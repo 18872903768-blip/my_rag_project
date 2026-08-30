@@ -44,6 +44,7 @@ class FakeRAG:
         role: str = "user",
         query_id: str | None = None,
         history: list[dict[str, str]] | None = None,
+        user_id: str | None = None,
     ) -> dict[str, Any]:
         self.calls.append(("ask_agent", query, role, query_id, list(history or [])))
         chunks = [

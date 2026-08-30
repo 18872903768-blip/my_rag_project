@@ -118,6 +118,14 @@ class RAGConfig:
     context_manager_enabled: bool = False
     context_budget_tokens: int = 6000
 
+    # 多轮指代消解：agent 检索前把"那第二种呢"改写为独立查询（LLM 一次调用）
+    query_contextualization_enabled: bool = False
+
+    # 长期记忆（饮食偏好领域化）：SQLite 存储 + LLM 抽取 + 写入策略。
+    # 开启后 agent 回答结束会尝试抽取记忆，检索前注入相关偏好。
+    memory_enabled: bool = False
+    memory_db_path: str = str((PROJECT_DIR / "memory_store.sqlite3").resolve())
+
     @classmethod
     def from_env(cls) -> RAGConfig:
         revision = os.getenv(
@@ -169,6 +177,15 @@ class RAGConfig:
             context_manager_enabled=os.getenv("RAG_CONTEXT_MANAGER", "false").casefold()
             not in {"0", "false", "no", "off"},
             context_budget_tokens=_int_from_env("RAG_CONTEXT_BUDGET", 6000),
+            query_contextualization_enabled=os.getenv(
+                "RAG_QUERY_CONTEXTUALIZATION", "false"
+            ).casefold()
+            not in {"0", "false", "no", "off"},
+            memory_enabled=os.getenv("RAG_MEMORY_ENABLED", "false").casefold()
+            not in {"0", "false", "no", "off"},
+            memory_db_path=_path_from_env(
+                "RAG_MEMORY_DB", PROJECT_DIR / "memory_store.sqlite3"
+            ),
         )
 
     @classmethod

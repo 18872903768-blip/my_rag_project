@@ -1,0 +1,95 @@
+[
+  {
+    "case_id": "anaphora_resolution",
+    "description": "指代消解：第二轮\"那第二种\"应改写为独立查询并检回红烧鱼头",
+    "sessions": [
+      {
+        "session_id": "case1-s1",
+        "turns": [
+          {"query": "清蒸鲈鱼和红烧鱼头哪种做法更简单", "expect_recall_dishes": ["清蒸鲈鱼"]},
+          {"query": "那第二种需要哪些食材", "expect_contextualized_query_contains": ["红烧鱼头"], "expect_recall_dishes": ["红烧鱼头"]}
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "memory_write_allergen",
+    "description": "记忆写入：用户声明花生过敏 → allergen 记忆落库",
+    "sessions": [
+      {
+        "session_id": "case2-s1",
+        "turns": [
+          {"query": "我对花生过敏，有什么凉菜可以推荐", "expect_memory_written": {"type": "allergen", "keyword": "花生"}}
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "memory_respected_in_answer",
+    "description": "记忆生效：同一会话第二轮推荐时，回答应考虑过敏约束",
+    "sessions": [
+      {
+        "session_id": "case3-s1",
+        "turns": [
+          {"query": "我对花生过敏，以后推荐菜的时候注意一下"},
+          {"query": "推荐几道下酒菜", "expect_memory_recalled": true, "judge": "回答是否明确避开了花生/考虑到用户的花生过敏（提到避免或未推荐含花生菜品均算通过）"}
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "memory_supersede",
+    "description": "记忆更新：口味偏好变化 → 旧记忆 superseded、新记忆 active",
+    "sessions": [
+      {
+        "session_id": "case4-s1",
+        "turns": [
+          {"query": "我不吃辣，帮我推荐两道家常菜", "expect_memory_written": {"type": "taste_preference", "keyword": "辣"}},
+          {"query": "我最近开始能吃微辣了，以后不用刻意避开", "expect_supersede": {"type": "taste_preference", "keyword": "辣"}}
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "temporary_not_written",
+    "description": "写入门槛：一次性需求（今晚想吃面）不应写入长期记忆",
+    "sessions": [
+      {
+        "session_id": "case5-s1",
+        "turns": [
+          {"query": "我今晚就想吃面，推荐个面条做法", "expect_memory_not_written": true}
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "cross_session_memory",
+    "description": "跨会话生效：会话 A 声明过敏，新会话 B（同用户）推荐时记忆被召回",
+    "sessions": [
+      {
+        "session_id": "case6-s1",
+        "turns": [
+          {"query": "我对海鲜过敏，这个要记住", "expect_memory_written": {"type": "allergen", "keyword": "海鲜"}}
+        ]
+      },
+      {
+        "session_id": "case6-s2",
+        "turns": [
+          {"query": "推荐两道简单的家常菜", "expect_memory_recalled": true}
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "constraint_ttl",
+    "description": "阶段性约束：减脂声明写入 constraint 且带过期时间",
+    "sessions": [
+      {
+        "session_id": "case7-s1",
+        "turns": [
+          {"query": "我最近在减脂，推荐些低脂的菜", "expect_memory_written": {"type": "constraint", "keyword": "减脂"}, "expect_memory_has_expiry": true}
+        ]
+      }
+    ]
+  }
+]

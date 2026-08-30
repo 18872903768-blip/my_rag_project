@@ -10,7 +10,8 @@ from __future__ import annotations
 
 import json
 import logging
-import threading
+import os
+import tempfile
 import uuid
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -65,18 +66,23 @@ def create_app(rag: Any | None = None) -> FastAPI:
         default_response_class=UTF8JSONResponse,
     )
     app.state.rag = rag
-    # 多轮会话记忆：内存存储（单 worker 适用；生产多副本应换 Redis）
-    app.state.sessions = {}
-    app.state.sessions_lock = threading.Lock()
+    # 多轮会话与长期记忆：SQLite 持久化（重启可恢复；多副本部署实现
+    # MySQLStore 替换，见 rag_modules/memory.py 的 Store 抽象）。
+    # fake rag（测试注入）没有 config 时用一次性临时库，保证用例隔离。
+    from rag_modules.memory import SQLiteMemoryStore
+
+    memory_db = getattr(getattr(rag, "config", None), "memory_db_path", None)
+    if not memory_db:
+        memory_db = os.path.join(
+            tempfile.gettempdir(), f"rag_memory_{uuid.uuid4().hex[:8]}.sqlite3"
+        )
+    app.state.memory_store = SQLiteMemoryStore(memory_db)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    MAX_SESSIONS = 200
-    HISTORY_TURNS = 6  # 最近3轮（user+assistant 各一条）
 
     def get_rag(request: Request) -> Any:
         system = request.app.state.rag
@@ -97,20 +103,19 @@ def create_app(rag: Any | None = None) -> FastAPI:
     def load_history(request: Request, session_id: str | None) -> list[dict[str, str]]:
         if not session_id:
             return []
-        with request.app.state.sessions_lock:
-            return list(request.app.state.sessions.get(session_id, []))
+        try:
+            return request.app.state.memory_store.load_history(session_id)
+        except Exception as exc:  # noqa: BLE001 - 会话故障降级为无历史
+            logger.warning("会话历史读取失败（按无历史处理）: %s", exc)
+            return []
 
     def save_turn(request: Request, session_id: str | None, question: str, answer: str) -> None:
         if not session_id:
             return
-        with request.app.state.sessions_lock:
-            sessions: dict[str, list[dict[str, str]]] = request.app.state.sessions
-            if session_id not in sessions and len(sessions) >= MAX_SESSIONS:
-                sessions.pop(next(iter(sessions)))  # FIFO 驱逐最老会话
-            turns = sessions.setdefault(session_id, [])
-            turns.append({"role": "user", "content": question})
-            turns.append({"role": "assistant", "content": answer[:400]})
-            del turns[:-HISTORY_TURNS]
+        try:
+            request.app.state.memory_store.save_turn(session_id, question, answer)
+        except Exception as exc:  # noqa: BLE001 - 会话写入失败不影响本次回答
+            logger.warning("会话历史写入失败（跳过）: %s", exc)
 
     @app.get("/healthz")
     def healthz(rag: Any = Depends(get_rag)) -> dict[str, Any]:
@@ -139,6 +144,7 @@ def create_app(rag: Any | None = None) -> FastAPI:
                     role=role,
                     query_id=query_id,
                     history=load_history(request, body.session_id),
+                    user_id=principal.subject or body.session_id,
                 )
             except Exception as exc:  # noqa: BLE001 - agent 链路失败已落 trace，这里转 5xx
                 logger.exception("agent 问答失败")
@@ -188,6 +194,7 @@ def create_app(rag: Any | None = None) -> FastAPI:
                         role=role,
                         query_id=query_id,
                         history=load_history(request, body.session_id),
+                        user_id=principal.subject or body.session_id,
                     )
                     answer = str(result.get("answer", ""))
                     save_turn(request, body.session_id, body.query, answer)
@@ -258,6 +265,49 @@ def create_app(rag: Any | None = None) -> FastAPI:
             if record.get("query_id") == query_id:
                 return TraceResponse(query_id=query_id, found=True, record=record)
         return TraceResponse(query_id=query_id, found=False, record=None)
+
+    # ------------------------------------------------ 长期记忆隐私端点（P2.8）
+
+    def _memory_user(principal: Principal, session_id: str | None) -> str:
+        user_id = principal.subject or session_id
+        if not user_id:
+            raise HTTPException(status_code=400, detail="需要认证 token 或提供 session_id")
+        return user_id
+
+    @app.get("/api/memory")
+    def list_memory(
+        request: Request,
+        session_id: str | None = None,
+        principal: Principal = Depends(get_principal),
+    ) -> dict[str, Any]:
+        user_id = _memory_user(principal, session_id)
+        from dataclasses import asdict
+
+        records = request.app.state.memory_store.list_memories(user_id)
+        return {"user_id": user_id, "memories": [asdict(record) for record in records]}
+
+    @app.delete("/api/memory/{memory_id}")
+    def delete_memory(
+        memory_id: str,
+        request: Request,
+        session_id: str | None = None,
+        principal: Principal = Depends(get_principal),
+    ) -> dict[str, Any]:
+        user_id = _memory_user(principal, session_id)
+        deleted = request.app.state.memory_store.delete_memory(user_id, memory_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="记忆不存在")
+        return {"user_id": user_id, "deleted": memory_id}
+
+    @app.delete("/api/memory")
+    def delete_all_memory(
+        request: Request,
+        session_id: str | None = None,
+        principal: Principal = Depends(get_principal),
+    ) -> dict[str, Any]:
+        user_id = _memory_user(principal, session_id)
+        deleted = request.app.state.memory_store.delete_all(user_id)
+        return {"user_id": user_id, "deleted_count": deleted}
 
     return app
 

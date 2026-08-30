@@ -50,6 +50,7 @@ class AgentState(TypedDict, total=False):
     events: list[dict[str, Any]]
     context_stats: dict[str, Any]
     standalone_query: str
+    memory_items: list[dict[str, Any]]
 
 
 def _event(name: str, **details: Any) -> dict[str, Any]:
@@ -159,6 +160,7 @@ class RecipeAgent:
         top_k: int = 3,
         visibility_expr_builder: Any | None = None,
         context_manager: Any | None = None,
+        query_contextualization_enabled: bool = False,
     ):
         self.retrieval_module = retrieval_module
         self.data_module = data_module
@@ -166,6 +168,7 @@ class RecipeAgent:
         self.top_k = top_k
         self.visibility_expr_builder = visibility_expr_builder
         self.context_manager = context_manager
+        self.query_contextualization_enabled = query_contextualization_enabled
         self.domain = get_domain()
         self.tools = build_agent_tools(self.domain)
         self.graph = self._build_graph()
@@ -253,7 +256,38 @@ class RecipeAgent:
         state.setdefault("events", []).append(
             _event("route", route=decision["route"], args=decision["tool_args"])
         )
+        # 多轮指代消解：把"那第二种呢"改写为独立完整查询后再检索
+        if (
+            self.query_contextualization_enabled
+            and state["route"] == "search_recipes"
+            and state.get("history")
+        ):
+            standalone = self._contextualize_query(question, state["history"])
+            if standalone:
+                state["standalone_query"] = standalone
+                state.setdefault("events", []).append(
+                    _event("query_contextualized", query=standalone)
+                )
         return state
+
+    def _contextualize_query(self, question: str, history: list[dict[str, Any]]) -> str:
+        """结合对话历史把追问改写为独立查询；失败返回空串（回退原始问题）。"""
+        recent = "; ".join(
+            f"{'用户' if turn['role'] == 'user' else '助手'}说:{str(turn['content'])[:80]}"
+            for turn in history[-4:]
+            if turn.get("content")
+        )
+        prompt = (
+            "结合对话历史，把用户最新的追问改写为独立、完整、适合菜谱检索的查询"
+            "（消解指代，补全菜品名/食材/烹饪方式），只输出改写后的查询，不要解释。\n"
+            f"对话历史: {recent}\n当前问题: {question}\n改写后的查询:"
+        )
+        try:
+            rewritten = str(self._llm().invoke(prompt).content).strip()
+            return rewritten if rewritten else ""
+        except Exception as exc:  # noqa: BLE001 - 改写失败回退原始问题
+            logger.warning("指代消解失败，使用原始问题: %s", exc)
+            return ""
 
     def _visibility_expr(self, role: str) -> str | None:
         if self.visibility_expr_builder is None:
@@ -299,7 +333,9 @@ class RecipeAgent:
                     extra_expr=self._visibility_expr(role),
                 )
             else:
-                chunks = self._search_recipes(args.get("query", question), role, **{
+                # 多轮指代消解后的独立查询优先，其次路由 LLM 给出的 query
+                query = state.get("standalone_query") or args.get("query", question)
+                chunks = self._search_recipes(query, role, **{
                     k: args.get(k) for k in ("category", "difficulty")
                 })
         except Exception as exc:  # noqa: BLE001 - tool failure degrades to plain hybrid search
@@ -444,11 +480,13 @@ class RecipeAgent:
         *,
         role: str = "user",
         history: list[dict[str, Any]] | None = None,
+        memory_items: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         initial: AgentState = {
             "question": question,
             "role": role,
             "history": history or [],
+            "memory_items": memory_items or [],
             "rewrites_used": 0,
             "events": [],
         }

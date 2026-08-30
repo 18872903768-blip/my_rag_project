@@ -52,6 +52,8 @@ class RecipeRAGSystem:
         self.generation_module: Any | None = None
         self.backend: Any | None = None
         self._agent: Any | None = None
+        self._memory_store: Any | None = None
+        self._memory_extractor: Any | None = None
 
     def initialize_system(self, *, load_generation: bool = True) -> None:
         """Initialize local modules and, when requested, the remote LLM client."""
@@ -364,8 +366,29 @@ class RecipeRAGSystem:
                 top_k=self.config.top_k,
                 visibility_expr_builder=self._visibility_expr_for_role,
                 context_manager=context_manager,
+                query_contextualization_enabled=self.config.query_contextualization_enabled,
             )
         return self._agent
+
+    def _get_memory_store(self) -> Any | None:
+        """长期记忆存储（SQLite）；memory 关闭时返回 None。"""
+        if not self.config.memory_enabled:
+            return None
+        if self._memory_store is None:
+            from rag_modules.memory import SQLiteMemoryStore
+
+            self._memory_store = SQLiteMemoryStore(self.config.memory_db_path)
+        return self._memory_store
+
+    def _get_memory_extractor(self) -> Any:
+        """记忆抽取器（复用生成 LLM）；惰性创建。"""
+        if self._memory_extractor is None:
+            if self.generation_module is None:
+                self.initialize_system(load_generation=True)
+            from rag_modules.memory import MemoryExtractor
+
+            self._memory_extractor = MemoryExtractor(self.generation_module.llm)
+        return self._memory_extractor
 
     def ask_agent(
         self,
@@ -374,13 +397,31 @@ class RecipeRAGSystem:
         role: str = DEFAULT_ROLE,
         query_id: str | None = None,
         history: list[dict[str, Any]] | None = None,
+        user_id: str | None = None,
     ) -> dict[str, Any]:
         """Run the agentic RAG graph; the result carries answer + audit events."""
         from rag_modules.observability import QueryTrace
 
         trace = QueryTrace(question, role=role, pipeline="agent", query_id=query_id)
+        memory_items: list[dict[str, Any]] = []
+        store = self._get_memory_store()
+        if store is not None and user_id:
+            try:
+                from rag_modules.memory import rank_memories
+
+                active = store.active_memories(user_id)
+                memory_items = [
+                    {"content": record.content, "type": record.type}
+                    for record in rank_memories(active, question)[:3]
+                ]
+                if memory_items:
+                    trace.event("memory_recalled", count=len(memory_items))
+            except Exception as exc:  # noqa: BLE001 - 记忆故障不影响主回答
+                logger.warning("记忆召回失败（跳过）: %s", exc)
         try:
-            result = self._get_agent().invoke(question, role=role, history=history)
+            result = self._get_agent().invoke(
+                question, role=role, history=history, memory_items=memory_items
+            )
             trace.events.extend(result.get("events", []))
             trace.event(
                 "summary",
@@ -392,7 +433,26 @@ class RecipeRAGSystem:
                 answer=result.get("answer"),
                 error=result.get("error"),
             )
+            # 合并 trace 事件（含 memory_recalled/memory_written 等非图内事件）
+            # 与图内事件，调用方（runner/API）读 result["events"] 即可看到全量
+            result["events"] = list(trace.events)
             result["query_id"] = trace.query_id
+            # 回答完成后的记忆抽取（写入策略在 memory 模块内），失败静默
+            if store is not None and user_id:
+                try:
+                    from rag_modules.memory import remember_turn
+
+                    written = remember_turn(
+                        store,
+                        self._get_memory_extractor(),
+                        user_id=user_id,
+                        question=question,
+                        answer=str(result.get("answer", "")),
+                    )
+                    if written:
+                        trace.event("memory_written", count=len(written))
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("记忆写入失败（跳过）: %s", exc)
             return result
         except Exception as exc:
             logger.exception("Agent 链路处理失败")
