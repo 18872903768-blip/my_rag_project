@@ -158,7 +158,7 @@ class RAGConfig:
             rerank_api_key=os.getenv("DASHSCOPE_API_KEY", ""),
             rerank_base_url=os.getenv("RAG_RERANK_BASE_URL", DEFAULT_DASHSCOPE_RERANK_URL),
             rerank_timeout_seconds=_float_from_env("RAG_RERANK_TIMEOUT", 10.0),
-            rerank_context_enabled=os.getenv("RAG_RERANK_CONTEXT", "false").casefold()
+            rerank_context_enabled=os.getenv("RAG_RERANK_CONTEXT", "true").casefold()
             not in {"0", "false", "no", "off"},
             embedding_model=os.getenv("RAG_EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5"),
             embedding_revision=revision or None,
@@ -172,7 +172,7 @@ class RAGConfig:
             temperature=_float_from_env("RAG_TEMPERATURE", 0.1),
             max_tokens=_int_from_env("RAG_MAX_TOKENS", 2048),
             max_context_chars=_int_from_env("RAG_MAX_CONTEXT_CHARS", 6000),
-            grounded_answer=os.getenv("RAG_GROUNDED_ANSWER", "false").casefold()
+            grounded_answer=os.getenv("RAG_GROUNDED_ANSWER", "true").casefold()
             not in {"0", "false", "no", "off"},
             context_manager_enabled=os.getenv("RAG_CONTEXT_MANAGER", "false").casefold()
             not in {"0", "false", "no", "off"},
