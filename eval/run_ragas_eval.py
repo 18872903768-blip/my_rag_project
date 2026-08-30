@@ -354,7 +354,7 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=None, help="只评测前 N 条")
     parser.add_argument("--sample", type=int, default=None, help="随机抽样 N 条")
     parser.add_argument("--seed", type=int, default=7)
-    parser.add_argument("--pipeline", choices=("classic", "both"), default="classic")
+    parser.add_argument("--pipeline", choices=("classic", "agent", "both"), default="classic")
     parser.add_argument("--max-workers", type=int, default=4)
     parser.add_argument("--output-dir", default=str(PROJECT_ROOT / ".artifacts" / "eval"))
     parser.add_argument("--skip-missing-reference", action="store_true")
@@ -400,10 +400,11 @@ def main() -> int:
     for index, sample in enumerate(samples, start=1):
         role = sample.get("role") or roles.get(sample["query"], "user")
         try:
-            collected = collect_classic_sample(system, sample, role)
-            if args.pipeline == "both":
+            if args.pipeline in ("both", "agent"):
                 records.append({**sample, **collect_agent_sample(system, sample, role)})
-            records.append({**sample, **collected})
+            if args.pipeline in ("classic", "both"):
+                collected = collect_classic_sample(system, sample, role)
+                records.append({**sample, **collected})
             print(f"[{index}/{len(samples)}] 已采集: {sample['query'][:30]}")
         except Exception as error:  # noqa: BLE001 - 采集失败记录后继续
             logger.warning("采集失败（%s）: %s", sample["query"][:30], error)
