@@ -113,6 +113,11 @@ class RAGConfig:
     # 可回退旧行为。
     grounded_answer: bool = True
 
+    # agent 管线统一上下文管理（ContextItem/token 预算/优先级/去重）。
+    # false 时走原 _history_prefix 硬拼 + _build_context 字符拼接路径。
+    context_manager_enabled: bool = False
+    context_budget_tokens: int = 6000
+
     @classmethod
     def from_env(cls) -> RAGConfig:
         revision = os.getenv(
@@ -161,6 +166,9 @@ class RAGConfig:
             max_context_chars=_int_from_env("RAG_MAX_CONTEXT_CHARS", 6000),
             grounded_answer=os.getenv("RAG_GROUNDED_ANSWER", "false").casefold()
             not in {"0", "false", "no", "off"},
+            context_manager_enabled=os.getenv("RAG_CONTEXT_MANAGER", "false").casefold()
+            not in {"0", "false", "no", "off"},
+            context_budget_tokens=_int_from_env("RAG_CONTEXT_BUDGET", 6000),
         )
 
     @classmethod

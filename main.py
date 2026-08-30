@@ -348,12 +348,22 @@ class RecipeRAGSystem:
 
             from rag_modules.agentic_rag import RecipeAgent
 
+            context_manager = None
+            if self.config.context_manager_enabled:
+                from rag_modules.context_management import ContextManager
+
+                context_manager = ContextManager(
+                    budget_tokens=self.config.context_budget_tokens,
+                    dedup_embeddings=self.index_module.setup_embeddings(),
+                )
+
             self._agent = RecipeAgent(
                 self.retrieval_module,
                 self.data_module,
                 self.generation_module,
                 top_k=self.config.top_k,
                 visibility_expr_builder=self._visibility_expr_for_role,
+                context_manager=context_manager,
             )
         return self._agent
 

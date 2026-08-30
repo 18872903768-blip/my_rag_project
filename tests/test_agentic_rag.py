@@ -39,11 +39,18 @@ class FakeGeneration:
         self.llm = llm
         self.answer = answer
         self.calls: list[tuple[str, list[Document]]] = []
+        self.context_texts: list[str | None] = []
 
     def generate_basic_answer(
-        self, query: str, docs: list[Document], *, image_paths: list[str] | None = None
+        self,
+        query: str,
+        docs: list[Document],
+        *,
+        image_paths: list[str] | None = None,
+        context_text: str | None = None,
     ) -> str:
         self.calls.append((query, docs))
+        self.context_texts.append(context_text)
         return self.answer
 
 

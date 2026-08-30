@@ -103,7 +103,12 @@ class GenerationIntegrationModule:
         return llm
 
     def generate_basic_answer(
-        self, query: str, context_docs: list[Document], *, image_paths: list[str] | None = None
+        self,
+        query: str,
+        context_docs: list[Document],
+        *,
+        image_paths: list[str] | None = None,
+        context_text: str | None = None,
     ) -> str:
         """
         生成基础回答
@@ -112,11 +117,16 @@ class GenerationIntegrationModule:
             query: 用户查询
             context_docs: 上下文文档列表
             image_paths: 检索命中的相关图片路径（可选）
+            context_text: 外部组装好的上下文（agent 管线的 Context Manager
+                产出）；传入时跳过 _build_context。classic 链路不传，行为不变
 
         Returns:
             生成的回答
         """
-        context = self._build_context(context_docs, self.max_context_chars, image_paths)
+        if context_text is not None:
+            context = context_text
+        else:
+            context = self._build_context(context_docs, self.max_context_chars, image_paths)
 
         prompt = ChatPromptTemplate.from_template(
             apply_grounding(get_domain().basic_answer_prompt, self.grounded_answer)

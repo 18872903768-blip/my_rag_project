@@ -48,6 +48,8 @@ class AgentState(TypedDict, total=False):
     retry_pending: bool
     error: str | None
     events: list[dict[str, Any]]
+    context_stats: dict[str, Any]
+    standalone_query: str
 
 
 def _event(name: str, **details: Any) -> dict[str, Any]:
@@ -156,12 +158,14 @@ class RecipeAgent:
         *,
         top_k: int = 3,
         visibility_expr_builder: Any | None = None,
+        context_manager: Any | None = None,
     ):
         self.retrieval_module = retrieval_module
         self.data_module = data_module
         self.generation_module = generation_module
         self.top_k = top_k
         self.visibility_expr_builder = visibility_expr_builder
+        self.context_manager = context_manager
         self.domain = get_domain()
         self.tools = build_agent_tools(self.domain)
         self.graph = self._build_graph()
@@ -354,18 +358,37 @@ class RecipeAgent:
         if state.get("answer") is not None:
             return state
         parents = state.get("parents", [])
-        # 多轮：历史以前缀并入生成问题，让模型理解"它/第二道"这类指代
-        question = self._history_prefix(state.get("history")) + state["question"]
         if not parents:
             state["answer"] = self.domain.agent_no_results
             return state
+        history = state.get("history")
         try:
-            state["answer"] = self.generation_module.generate_basic_answer(
-                question, parents, image_paths=state.get("image_paths")
-            )
+            if self.context_manager is not None:
+                # 统一上下文管道：conversation/retrieval/memory 三类来源按
+                # token 预算与优先级组装，替代 history 前缀硬拼 + 字符顺序拼接
+                from rag_modules.context_management import build_agent_context_items
+
+                items = build_agent_context_items(
+                    history, parents, memories=state.get("memory_items")
+                )
+                built = self.context_manager.build(items, image_paths=state.get("image_paths"))
+                state["context_stats"] = built.stats
+                state.setdefault("events", []).append(_event("context_built", **built.stats))
+                state["answer"] = self.generation_module.generate_basic_answer(
+                    state["question"],
+                    parents,
+                    image_paths=state.get("image_paths"),
+                    context_text=built.context,
+                )
+            else:
+                # 多轮：历史以前缀并入生成问题，让模型理解"它/第二道"这类指代
+                question = self._history_prefix(history) + state["question"]
+                state["answer"] = self.generation_module.generate_basic_answer(
+                    question, parents, image_paths=state.get("image_paths")
+                )
         except Exception as exc:  # noqa: BLE001 - LLM failure falls back to retrieved summary
             logger.warning("生成节点失败，降级为检索摘要: %s", exc)
-            state["answer"] = self._offline_answer(question, parents)
+            state["answer"] = self._offline_answer(state["question"], parents)
             state["error"] = f"generate_fallback: {exc}"
             state.setdefault("events", []).append(
                 _event("generate_fallback", error=str(exc))
