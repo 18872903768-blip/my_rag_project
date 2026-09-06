@@ -18,3 +18,5 @@ logs/
 *.sqlite3-shm
 *.sqlite3-wal
 *.db
+docs/
+项目八股/
